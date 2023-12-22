@@ -10,6 +10,7 @@ git clone git@github.com:yocchan-git/sinatra-memo.git
 以下のコマンドを実行して、初期設定とサーバーを起動してください
 ```bash
 cd sinatra-memo
+bundle install
 ruby routes.rb -p 4567
 ```
 
