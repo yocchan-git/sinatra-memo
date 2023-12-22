@@ -2,13 +2,13 @@
 
 source 'https://rubygems.org'
 
+gem 'json'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'webrick'
-gem 'json'
 
 group :development do
   gem 'debug'
-  gem 'rubocop-fjord', require: false
   gem 'erb_lint', require: false
+  gem 'rubocop-fjord', require: false
 end
