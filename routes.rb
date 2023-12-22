@@ -53,12 +53,12 @@ post '/memos' do
   File.open('memo.json', 'w') do |file|
     file.write(JSON.pretty_generate(new_memo_datas))
   end
-  redirect to("/memos")
+  redirect to('/memos')
 end
 
 patch '/memos/:id' do
-  update_memo_datas = File.open("memo.json") { |f| JSON.load(f) } 
-  memo = update_memo_datas.find { |item| item['id'] == params[:id].to_i }
+  update_memo_datas = JSON.parse(File.read('memo.json'))
+  memo = update_memo_datas.find { |update_memo_data| update_memo_data['id'] == params[:id].to_i }
 
   memo['title'] = params[:title]
   memo['description'] = params[:description]
@@ -70,8 +70,8 @@ patch '/memos/:id' do
 end
 
 delete '/memos/:id' do
-  delete_memo_datas = File.open("memo.json") { |f| JSON.load(f) }
-  delete_memo = delete_memo_datas.find { |item| item['id'] == params[:id].to_i }
+  delete_memo_datas = JSON.parse(File.read('memo.json'))
+  delete_memo = delete_memo_datas.find { |delete_memo_data| delete_memo_data['id'] == params[:id].to_i }
 
   delete_memo_number = delete_memo_datas.index(delete_memo)
   delete_memo_datas.delete_at(delete_memo_number)
@@ -79,5 +79,5 @@ delete '/memos/:id' do
   File.open('memo.json', 'w') do |file|
     file.write(JSON.pretty_generate(delete_memo_datas))
   end
-  redirect to("/memos")
+  redirect to('/memos')
 end
