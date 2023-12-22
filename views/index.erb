@@ -1,0 +1,7 @@
+<a href="/memos/new">追加</a>
+
+<ul>
+  <% @memos.each do |memo| %>
+    <li><a href="/memos/<%= memo['id'] %>"><%= escape_text(memo['title']) %></a></li>
+  <% end %>
+</ul>

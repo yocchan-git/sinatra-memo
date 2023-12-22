@@ -1,0 +1,11 @@
+<form action="/memos/<%= @memo['id'] %>" method="post">
+    <input type="hidden" name="_method" value="patch">
+
+    <label for="title">タイトル</label>
+    <input type="title" name="title" id="title" value="<%= @memo['title'] %>"><br><br>
+
+    <label for="description">詳細</label>
+    <textarea name="description" id="description" cols="30" rows="5"><%= @memo['description'] %></textarea><br><br>
+
+    <input type="submit" value="追加">
+</form>
