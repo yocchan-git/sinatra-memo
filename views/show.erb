@@ -1,7 +1,7 @@
 <h2><%= escape_text(@memo['title']) %></h2>
 <p><%= escape_text(@memo['description']) %></p>
 
-<a href="/memos/<%= @memo['id'] %>/edit">変更</a>
+<button onclick="location.href='/memos/<%= @memo['id'] %>/edit'">変更</button><br><br>
 <form action="/memos/<%= @memo['id'] %>" method="post">
   <input type="hidden" name="_method" value="delete">
 
