@@ -51,7 +51,7 @@ post '/memos' do
   new_memo_datas = memo_datas
   new_memo_datas << new_memo
   File.open('memo.json', 'w') do |file|
-    file.write(JSON.pretty_generate(new_memo_datas))
+    file.write(JSON.generate(new_memo_datas))
   end
   redirect to('/memos')
 end
@@ -64,7 +64,7 @@ patch '/memos/:id' do
   memo['description'] = params[:description]
 
   File.open('memo.json', 'w') do |file|
-    file.write(JSON.pretty_generate(update_memo_datas))
+    file.write(JSON.generate(update_memo_datas))
   end
   redirect to("/memos/#{params[:id]}")
 end
@@ -77,7 +77,7 @@ delete '/memos/:id' do
   delete_memo_datas.delete_at(delete_memo_number)
 
   File.open('memo.json', 'w') do |file|
-    file.write(JSON.pretty_generate(delete_memo_datas))
+    file.write(JSON.generate(delete_memo_datas))
   end
   redirect to('/memos')
 end
