@@ -2,7 +2,9 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
+require 'pg'
+
+database = PG.connect(dbname: 'memos')
 
 helpers do
   def escape_text(text)
@@ -10,18 +12,13 @@ helpers do
   end
 end
 
-def memo_datas
-  memos = File.read('memo.json')
-  memos.empty? ? [] : JSON.parse(memos)
-end
-
-def memo_data
-  memos = JSON.parse(File.read('memo.json'))
-  @memo = memos.find { |memo| memo['id'] == params[:id].to_i }
+def memo_data(connected_database)
+  memo = connected_database.exec_params('SELECT * FROM memo WHERE id = $1;', [params[:id]])
+  memo[0]
 end
 
 get '/memos' do
-  @memos = memo_datas
+  @memos = database.exec('SELECT * FROM memo;')
   erb :index
 end
 
@@ -30,54 +27,35 @@ get '/memos/new' do
 end
 
 get '/memos/:id' do
-  memo_data
+  @memo = memo_data(database)
   erb :show
 end
 
 get '/memos/:id/edit' do
-  memo_data
+  @memo = memo_data(database)
   erb :edit
 end
 
 post '/memos' do
-  memos = File.read('memo.json')
-  id = memos.empty? ? 1 : JSON.parse(memos).map { |memo| memo['id'] }.max.to_i + 1
-
-  new_memo = {}
-  new_memo['id'] = id
-  new_memo['title'] = params[:title]
-  new_memo['description'] = params[:description]
-
-  new_memo_datas = memo_datas
-  new_memo_datas << new_memo
-  File.open('memo.json', 'w') do |file|
-    file.write(JSON.generate(new_memo_datas))
-  end
+  database.exec_params(
+    'INSERT INTO memo (title, description) VALUES ($1, $2);',
+    [params[:title], params[:description]]
+  )
   redirect to('/memos')
 end
 
 patch '/memos/:id' do
-  update_memo_datas = JSON.parse(File.read('memo.json'))
-  memo = update_memo_datas.find { |update_memo_data| update_memo_data['id'] == params[:id].to_i }
-
-  memo['title'] = params[:title]
-  memo['description'] = params[:description]
-
-  File.open('memo.json', 'w') do |file|
-    file.write(JSON.generate(update_memo_datas))
-  end
+  database.exec_params(
+    'UPDATE memo SET title = $1, description = $2 WHERE id = $3;',
+    [params[:title], params[:description], params[:id]]
+  )
   redirect to("/memos/#{params[:id]}")
 end
 
 delete '/memos/:id' do
-  delete_memo_datas = JSON.parse(File.read('memo.json'))
-  delete_memo = delete_memo_datas.find { |delete_memo_data| delete_memo_data['id'] == params[:id].to_i }
-
-  delete_memo_number = delete_memo_datas.index(delete_memo)
-  delete_memo_datas.delete_at(delete_memo_number)
-
-  File.open('memo.json', 'w') do |file|
-    file.write(JSON.generate(delete_memo_datas))
-  end
+  database.exec_params(
+    'DELETE FROM memo WHERE id = $1;',
+    [params[:id]]
+  )
   redirect to('/memos')
 end
