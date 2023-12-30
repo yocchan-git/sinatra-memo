@@ -2,7 +2,7 @@
 <p><%= escape_text(@memo['description']) %></p>
 
 <div class="btn">
-  <button onclick="location.href='/memos/<%= @memo['id'] %>/edit'">変更</button>
+  <a href="/memos/<%= @memo['id'] %>/edit">変更</a>
 </div>
 <div class="btn">
   <form action="/memos/<%= @memo['id'] %>" method="post">
