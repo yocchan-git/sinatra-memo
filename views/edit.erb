@@ -1,0 +1,11 @@
+<form action="/memos/<%= @memo['id'] %>" method="post">
+    <input type="hidden" name="_method" value="patch">
+
+    <label for="title">タイトル</label><br>
+    <input type="text" name="title" id="title" value="<%= escape_text(@memo['title']) %>"><br><br>
+
+    <label for="description">詳細</label><br>
+    <textarea name="description" id="description" cols="30" rows="5"><%= escape_text(@memo['description']) %></textarea><br><br>
+
+    <input type="submit" value="変更">
+</form>
